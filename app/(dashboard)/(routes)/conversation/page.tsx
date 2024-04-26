@@ -9,8 +9,17 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormControl, FormField, FormItem} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import axios from "axios";
+
+
 
 export default function ConversationPage() {
+    const router = useRouter();
+    const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([])
+
    const form =  useForm<z.infer<typeof formSchema>>({
        resolver: zodResolver(formSchema),
        defaultValues: {
@@ -20,9 +29,33 @@ export default function ConversationPage() {
     const  isLoading = form.formState.isSubmitting;
 
    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-         console.log(values);
+
+        try {
+
+            const userMessage:ChatCompletionMessageParam = {
+                role: "user",
+                content: values.prompt
+            }
+            const newMessages = [...messages, userMessage];
+            console.log("newMessages",newMessages)
+
+            const response = await axios.post("/api/conversation", {messages: newMessages});
+            console.log("20000000000000000",response.data)
+            setMessages((current) => [...current,userMessage,response.data]);
+
+            form.reset()
+
+        }catch (error){
+            //TODO:open pro model
+            console.error("[CONVERSATION]",error)
+        }finally {
+            router.refresh()
+        }
    }
 
+    console.log("messages22222222222",messages)
+
+    // @ts-ignore
     return (
         <div>
             <Heading
@@ -59,7 +92,13 @@ export default function ConversationPage() {
                     </Form>
                 </div>
                 <div className="space-y-4 mt-4">
-                    message content
+                   <div className="flex flex-col-reverse gap-y-4">
+                       {messages.map((message) =>(
+                               <div key="">
+                                   {message.content}
+                               </div>
+                       ))}
+                   </div>
                 </div>
             </div>
         </div>
