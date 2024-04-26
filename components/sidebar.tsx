@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {Montserrat} from "next/font/google";
 import {cn} from "@/lib/utils";
-import {Code, ImagesIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon} from "lucide-react";
+import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon } from "lucide-react";
 import {usePathname} from "next/navigation";
 
 
@@ -27,7 +27,7 @@ const routes = [
     },
     {
         label: "Image Generation",
-        icon: ImagesIcon,
+        icon: ImageIcon,
         href: "/image",
         color: "text-pink-700",
     },

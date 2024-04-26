@@ -1,6 +1,6 @@
 'use client'
 
-import {ArrowBigRight, ArrowRight, Code, ImagesIcon, MessageSquare, Music, VideoIcon} from "lucide-react";
+import {ArrowBigRight, ArrowRight, Code, ImageIcon, MessageSquare, Music, VideoIcon} from "lucide-react";
 import {Card} from "@/components/ui/card";
 import {cn} from "@/lib/utils";
 import {useRouter} from "next/navigation";
@@ -22,7 +22,7 @@ const tools =[
     },
     {
         label: "Image Generation",
-        icon: ImagesIcon,
+        icon: ImageIcon,
         color: "text-pink-700",
         bgColor: "bg-pink-700/10",
         href: "/image",
