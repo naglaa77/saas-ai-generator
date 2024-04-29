@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import {Heading} from "@/components/heading";
-import {MessageSquare} from "lucide-react";
+import {Code} from "lucide-react";
 import {useForm} from "react-hook-form";
 import {formSchema} from "@/app/(dashboard)/(routes)/conversation/constants";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -18,10 +18,11 @@ import {Loader} from "@/components/loader";
 import { cn } from "@/lib/utils";
 import {UserAvatar} from "@/components/user-avatar";
 import {BotAvatar} from "@/components/bot-avatar";
+import ReactMarkdown from "react-markdown";
 
 
 
-export default function ConversationPage() {
+export default function CodePage() {
     const router = useRouter();
     const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([])
 
@@ -44,7 +45,7 @@ export default function ConversationPage() {
             const newMessages = [...messages, userMessage];
             console.log("newMessages",newMessages)
 
-            const response = await axios.post("/api/conversation", {messages: newMessages});
+            const response = await axios.post("/api/code", {messages: newMessages});
             console.log("20000000000000000",response.data)
             setMessages((current) => [...current,userMessage,response.data]);
 
@@ -64,11 +65,11 @@ export default function ConversationPage() {
     return (
         <div>
             <Heading
-                title="Conversation"
-                description="This is the most advanced  conversation"
-                icon={MessageSquare}
-                iconColor="text-violet-500"
-                bgColor="bg-violet-500/10"
+                title="Code Generation"
+                description="Generate code snippets using OpenAI's GPT-3."
+                icon={Code}
+                iconColor="text-green-700"
+                bgColor="bg-green-700/10"
             />
             <div className="px-4 lg:px-8">
                 <div>
@@ -83,7 +84,7 @@ export default function ConversationPage() {
                                         <FormControl className="m-0 p-0">
                                             <Input className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                                                disabled={isLoading}
-                                               placeholder="Type your prompt here"
+                                               placeholder="Type your wanted code here"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -113,9 +114,21 @@ export default function ConversationPage() {
                                    className={cn("p-8 w-full items-start gap-x-8 rounded-lg",message.role === "user" ? "bg-white border border-black/10" : "bg-muted")}
                                >
                                    {message.role === "user" ? <UserAvatar/> : <BotAvatar/>}
-                                   <p className="text-sm">
-                                       {message.content}
-                                   </p>
+                                  <ReactMarkdown
+                                      components={{
+                                          pre:({node,...props})=>(
+                                              <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                                                    <pre {...props}/>
+                                              </div>
+                                          ),
+                                            code:({node,...props})=>(
+                                                <code {...props} className="bg-black/10 rounded-lg p-1"/>
+                                            )
+                                      }}
+                                      className="text-sm overflow-hidden leading-7"
+                                  >
+                                      {message.content || ""}
+                                  </ReactMarkdown>
                                </div>
                        ))}
                    </div>
