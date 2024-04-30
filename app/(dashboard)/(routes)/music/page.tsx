@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import {Heading} from "@/components/heading";
-import {Code} from "lucide-react";
+import {MessageSquare, Music} from "lucide-react";
 import {useForm} from "react-hook-form";
 import {formSchema} from "@/app/(dashboard)/(routes)/conversation/constants";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -11,21 +11,16 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
-import { ChatCompletionRequestMessage } from "openai";
 import axios from "axios";
 import {Empty} from "@/components/empty";
 import {Loader} from "@/components/loader";
-import { cn } from "@/lib/utils";
-import {UserAvatar} from "@/components/user-avatar";
-import {BotAvatar} from "@/components/bot-avatar";
-import ReactMarkdown from "react-markdown";
 
 
 
-export default function CodePage() {
+export default function MusicPage() {
     const router = useRouter();
-    const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([])
-
+    const [music, setMusic] = useState<string>()
+    console.log("music",music)
    const form =  useForm<z.infer<typeof formSchema>>({
        resolver: zodResolver(formSchema),
        defaultValues: {
@@ -38,16 +33,10 @@ export default function CodePage() {
 
         try {
 
-            const userMessage:ChatCompletionRequestMessage = {
-                role: "user",
-                content: values.prompt
-            }
-            const newMessages = [...messages, userMessage];
-            console.log("newMessages",newMessages)
-
-            const response = await axios.post("/api/code", {messages: newMessages});
-            console.log("20000000000000000",response.data)
-            setMessages((current) => [...current,userMessage,response.data]);
+            // @ts-ignore
+            setMusic(undefined)
+            const response = await axios.post("/api/music");
+            setMusic(response.data.audio)
 
             form.reset()
 
@@ -59,17 +48,16 @@ export default function CodePage() {
         }
    }
 
-    console.log("messages22222222222",messages)
 
     // @ts-ignore
     return (
         <div>
             <Heading
-                title="Code Generation"
-                description="Generate code snippets using OpenAI's GPT-3."
-                icon={Code}
-                iconColor="text-green-700"
-                bgColor="bg-green-700/10"
+                title="Music Generation"
+                description="Turn your prompt to music"
+                icon={Music}
+                iconColor="text-emerald-500"
+                bgColor="bg-emerald-500/10"
             />
             <div className="px-4 lg:px-8">
                 <div>
@@ -84,7 +72,7 @@ export default function CodePage() {
                                         <FormControl className="m-0 p-0">
                                             <Input className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                                                disabled={isLoading}
-                                               placeholder="Type your wanted code here"
+                                               placeholder="Piano solo"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -104,34 +92,17 @@ export default function CodePage() {
                         </div>
 
                     )}
-                    {messages.length === 0 && !isLoading && (
-                        <Empty label="No conversation started."/>
+                    {!music && !isLoading && (
+                        <Empty label="No music started."/>
                     )}
-                   <div className="flex flex-col-reverse gap-y-4">
-                       {messages.map((message) =>(
-                               <div
-                                   key={message.content}
-                                   className={cn("p-8 w-full items-start gap-x-8 rounded-lg",message.role === "user" ? "bg-white border border-black/10" : "bg-muted")}
-                               >
-                                   {message.role === "user" ? <UserAvatar/> : <BotAvatar/>}
-                                  <ReactMarkdown
-                                      components={{
-                                          pre:({node,...props})=>(
-                                              <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
-                                                    <pre {...props}/>
-                                              </div>
-                                          ),
-                                            code:({node,...props})=>(
-                                                <code {...props} className="bg-black/10 rounded-lg p-1"/>
-                                            )
-                                      }}
-                                      className="text-sm overflow-hidden leading-7"
-                                  >
-                                      {message.content || ""}
-                                  </ReactMarkdown>
-                               </div>
-                       ))}
-                   </div>
+
+                       {music && (
+                           <audio controls className="w-full mt-8">
+                               <source src={music} />
+                           </audio>
+
+                       )}
+
                 </div>
             </div>
         </div>
@@ -139,18 +110,16 @@ export default function CodePage() {
 }
 
 
-//
 // "use client";
 //
 // import axios from "axios";
 // import * as z from "zod";
-// import { Code } from "lucide-react";
+// import { MessageSquare } from "lucide-react";
 // import { useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
 // import { useRouter } from "next/navigation";
 // import OpenAI from "openai";
 // import { useState } from "react";
-// import ReactMarkdown from "react-markdown";
 //
 // import { Heading } from "@/components/heading";
 // import {
@@ -163,9 +132,9 @@ export default function CodePage() {
 // import { Button } from "@/components/ui/button";
 // import { Empty } from "@/components/empty";
 // import { Loader } from "@/components/loader";
-// import { UserAvatar } from "@/components/user-profile";
-// import { BotAvatar } from "@/components/bot-avatar";
 // import { cn } from "@/lib/utils";
+// import {UserAvatar} from "@/components/user-avatar";
+// import { BotAvatar } from "@/components/bot-avatar";
 //
 // import { formSchema } from "./constants";
 //
@@ -174,7 +143,7 @@ export default function CodePage() {
 //     content: string;
 // };
 //
-// const CodePage = () => {
+// const ConversationPage = () => {
 //     const router = useRouter();
 //     const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
 //
@@ -195,7 +164,7 @@ export default function CodePage() {
 //             };
 //             const newMessages = [...messages, userMessage];
 //
-//             const response = await axios.post("/api/code", {
+//             const response = await axios.post("/api/conversation", {
 //                 messages: newMessages,
 //             });
 //
@@ -213,11 +182,11 @@ export default function CodePage() {
 //     return (
 //         <div>
 //             <Heading
-//                 title="Code Generation"
-//                 description="A simpler way to help you generate working code."
-//                 icon={Code}
-//                 iconColor="text-yellow-700"
-//                 bgColor="bg-yellow-300/10"
+//                 title="Conversation"
+//                 description="Our most innovative conversation model to date"
+//                 icon={MessageSquare}
+//                 iconColor="text-violet-500"
+//                 bgColor="bg-violet-500/10"
 //             />
 //             <div className="px-4 lg:px-8">
 //                 <div>
@@ -245,14 +214,14 @@ export default function CodePage() {
 //                                             <Input
 //                                                 className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
 //                                                 disabled={isLoading}
-//                                                 placeholder="A fully interactable pygame version of snake."
+//                                                 placeholder="What is the circumference of the Earth?"
 //                                                 {...field}
 //                                             />
 //                                         </FormControl>
 //                                     </FormItem>
 //                                 )}
 //                             />
-//                             <Button className="col-span-12 lg:col-span-2 w-full bg-yellow-400 hover:bg-yellow-700" disabled={isLoading}>
+//                             <Button className="col-span-12 lg:col-span-2 w-full bg-purple-500 hover:bg-purple-700" disabled={isLoading}>
 //                                 Generate
 //                             </Button>
 //                         </form>
@@ -277,21 +246,9 @@ export default function CodePage() {
 //                                 )}
 //                             >
 //                                 {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
-//                                 <ReactMarkdown
-//                                     components={{
-//                                         pre: ({ node, ...props }) => (
-//                                             <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
-//                                                 <pre {...props} />
-//                                             </div>
-//                                         ),
-//                                         code: ({ node, ...props }) => (
-//                                             <code className="bg-black/10 rounded-lg p-1" {...props} />
-//                                         )
-//                                     }}
-//                                     className={"text-sm overflow-hidden leading-7"}
-//                                 >
-//                                     {message.content || ""}
-//                                 </ReactMarkdown>
+//                                 <p className="text-sm">
+//                                     {message.content}
+//                                 </p>
 //                             </div>
 //                         ))}
 //                     </div>
@@ -301,4 +258,4 @@ export default function CodePage() {
 //     );
 // }
 //
-// export default CodePage;
+// export default ConversationPage;
