@@ -26,11 +26,7 @@ export async function POST(req:Request) {
 
 
     const input = {
-      fps: 24,
-      width: 1024,
-      height: 576,
       prompt: prompt,
-      guidance_scale: 17.5,
       negative_prompt: "very blue, dust, noisy, washed out, ugly, distorted, broken"
     };
 
