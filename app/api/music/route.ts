@@ -2,6 +2,8 @@
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import Replicate from "replicate";
+import {checkApiLimit,increaseApiLimit} from "@/lib/api-limit";
+
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -23,7 +25,11 @@ export async function POST(req:Request) {
       return new NextResponse("Prompt are required", { status: 400 });
     }
 
+    const freeTrail = await checkApiLimit();
 
+    if(!freeTrail){
+      return new NextResponse("You have exceeded the free trail limit",{status:403})
+    }
 
     const input = {
       prompt_b: prompt,
@@ -31,7 +37,7 @@ export async function POST(req:Request) {
 
     const response = await replicate.run("riffusion/riffusion:8cf61ea6c56afd61d8f5b9ffd14d7c216c0a93844ce2d82ac1c9ecc9c7f24e05", { input });
 
-    console.log("response",response)
+    await increaseApiLimit();
 
     return NextResponse.json(response);
 
@@ -42,68 +48,3 @@ export async function POST(req:Request) {
 
 }
 
-// import { auth } from "@clerk/nextjs";
-// import { NextResponse } from "next/server";
-// import OpenAI from "openai";
-// import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-//
-// const openai = new OpenAI({
-//   apiKey: process.env.OPENAI_API_KEY,
-// });
-//
-// const instructionMessage: ChatCompletionMessageParam = {
-//   role: "system",
-//   content: "Answer questions as short and quickly as possible. You must do it under 75 tokens."
-// }
-//
-// export async function POST(
-//     req: Request
-// )   {
-//   try {
-//     const { userId } = auth();
-//     const body = await req.json();
-//     const { messages  } = body;
-//
-//     if (!userId) {
-//       return new NextResponse("Unauthorized", { status: 401 });
-//     }
-//
-//     if (!openai.apiKey) {
-//       return new NextResponse("OpenAI API Key not configured.", { status: 500 });
-//     }
-//
-//     if (!openai.apiKey) {
-//       return new NextResponse("OpenAI API Key not configured.", { status: 500 });
-//     }
-//
-//     if (!messages) {
-//       return new NextResponse("Messages are required", { status: 400 });
-//     }
-//
-//     const response = await openai.chat.completions.create({
-//       model: "gpt-3.5-turbo",
-//       max_tokens: 75,
-//       temperature: 0.5,
-//       messages: [instructionMessage, ...messages]
-//     });
-//
-//     return NextResponse.json(response.choices[0].message);
-//   }   catch (error) {
-//     console.log("[CONVERSATION_ERROR]", error);
-//     return new NextResponse("Internal Error", { status: 500 });
-//   }
-// }
-
-//EXACT Copy // added 75 token limit
-
-// additional added
-// const instructionMessage: ChatCompletionMessageParam = {
-//role: "system",
-//content: "Answer questions as short and quickly as possible. You must do it under 75 tokens."
-//}
-
-// Unaltered version below
-// const response = await openai.chat.completions.create({
-// model: "gpt-3.5-turbo",
-// messages
-// });
