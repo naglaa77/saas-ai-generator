@@ -14,10 +14,13 @@ import {useState} from "react";
 import axios from "axios";
 import {Empty} from "@/components/empty";
 import {Loader} from "@/components/loader";
+import {useProModal} from "@/hooks/use-pro-modal";
 
 
 
 export default function MusicPage() {
+
+    const proModal = useProModal()
     const router = useRouter();
     const [music, setMusic] = useState<string>()
     console.log("music",music)
@@ -40,9 +43,10 @@ export default function MusicPage() {
 
             form.reset()
 
-        }catch (error){
-            //TODO:open pro model
-            console.error("[CONVERSATION]",error)
+        }catch (error:any){
+            if (error?.response?.status === 403) {
+                proModal.onOpen()
+            }
         }finally {
             router.refresh()
         }

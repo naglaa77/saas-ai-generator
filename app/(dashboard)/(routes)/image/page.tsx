@@ -21,11 +21,14 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {amountOptions, resolutionOptions} from "@/app/(dashboard)/(routes)/image/constants";
 import {Card, CardFooter} from "@/components/ui/card";
 import Image from "next/image";
+import {useProModal} from "@/hooks/use-pro-modal";
 
 
 
 
 export default function ImagePage() {
+
+    const proModal = useProModal()
     const router = useRouter();
     const [images, setImages] = useState<string[]>([])
 
@@ -50,9 +53,10 @@ export default function ImagePage() {
             form.reset()
             console.log("images",values)
 
-        }catch (error){
-            //TODO:open pro model
-            console.error("[CONVERSATION]",error)
+        }catch (error:any){
+            if (error?.response?.status === 403) {
+                proModal.onOpen()
+            }
         }finally {
             router.refresh()
         }
