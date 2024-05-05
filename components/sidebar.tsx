@@ -6,9 +6,11 @@ import {cn} from "@/lib/utils";
 import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon } from "lucide-react";
 import {usePathname} from "next/navigation";
 import {FreeCounter} from "@/components/free-counter";
+import {is} from "unist-util-is";
 
 interface SidebarProps {
-    apiLimitCount: number
+    apiLimitCount: number,
+    isPro: boolean
 }
 
 const montserrat = Montserrat({
@@ -59,7 +61,7 @@ const routes = [
         href: "/settings",
     }
 ]
-export default function Sidebar({apiLimitCount=0}:SidebarProps) {
+export default function Sidebar({apiLimitCount=0,isPro=false}:SidebarProps) {
 
    const pathName =  usePathname()
 
@@ -85,7 +87,7 @@ export default function Sidebar({apiLimitCount=0}:SidebarProps) {
                     ))}
                 </div>
             </div>
-            <FreeCounter apiLimitCount={apiLimitCount}/>
+            <FreeCounter isPro={isPro} apiLimitCount={apiLimitCount}/>
         </div>
     )
 }

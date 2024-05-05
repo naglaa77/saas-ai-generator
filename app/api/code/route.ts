@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import {ChatCompletionRequestMessage, Configuration, OpenAIApi} from "openai";
 import {checkApiLimit,increaseApiLimit} from "@/lib/api-limit";
+import {checkSubscription} from "@/lib/subscription";
 
 
 const configuration = new Configuration({
@@ -35,8 +36,9 @@ export async function POST(req:Request) {
       return new NextResponse("Messages are required", { status: 400 });
     }
     const freeTrail = await checkApiLimit();
+    const isPro = await checkSubscription();
 
-    if(!freeTrail){
+    if(!freeTrail && !isPro){
       return new NextResponse("You have exceeded the free trail limit",{status:403})
     }
 
@@ -45,7 +47,10 @@ export async function POST(req:Request) {
       model: "gpt-3.5-turbo",
       messages:[instructionMessage,...messages],
     });
-    await increaseApiLimit();
+
+    if(!isPro) {
+      await increaseApiLimit();
+    }
     return NextResponse.json(response.data.choices[0].message);
 
     }catch(error){

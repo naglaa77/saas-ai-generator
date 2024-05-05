@@ -8,10 +8,11 @@ import {useEffect, useState} from "react";
 
 
 interface MobileSidebarProps {
-    apiLimitCount: number
+    apiLimitCount: number,
+    isPro: boolean
 }
 
-export default function MobileSidebar({apiLimitCount=0}:MobileSidebarProps) {
+export default function MobileSidebar({apiLimitCount=0,isPro=false}:MobileSidebarProps) {
 // i do that because i have error Hydration where In HTML, <button> cannot be a descendant of <button>. so
 // i use this to prevent the error useState and useEffect
     const [isMounted, setIsMounted] = useState(false)
@@ -29,7 +30,7 @@ export default function MobileSidebar({apiLimitCount=0}:MobileSidebarProps) {
                </Button>
            </SheetTrigger>
            <SheetContent side="left" className="p-0">
-               <Sidebar apiLimitCount={apiLimitCount}/>
+               <Sidebar isPro={isPro} apiLimitCount={apiLimitCount}/>
            </SheetContent>
 
        </Sheet>
