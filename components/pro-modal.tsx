@@ -16,6 +16,7 @@ import {Card} from "@/components/ui/card";
 import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 import {useState} from "react";
+import toast from "react-hot-toast";
 
 
 
@@ -63,7 +64,7 @@ export function ProModal() {
             const response = await axios.get("/api/stripe");
             window.location.href = response.data.url;
         } catch (error) {
-            console.log("[STRIPE_CLIENT_ERROR]", error);
+            toast.error("An error occurred. Please try again.");
         }finally {
             setLoading(false)
         }
@@ -102,6 +103,7 @@ export function ProModal() {
                 </DialogHeader>
                 <DialogFooter>
                     <Button
+                        disabled={loading}
                         onClick={onSubscribe}
                         className="w-full"
                         size="lg"
