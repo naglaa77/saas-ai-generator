@@ -1,59 +1,7 @@
 'use client'
 
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {it} from "node:test";
-
-const testimonials = [
-    {
-        name: "John Doe",
-        title: "CEO, Apple",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut" ,
-        avatar: "J"
-    },
-    {
-        name: "John Doe",
-        title: "CEO, Apple",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut" ,
-        avatar: "J"
-    },
-    {
-        name: "John Doe",
-        title: "CEO, Apple",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut" ,
-        avatar: "J"
-    },
-    {
-        name: "John Doe",
-        title: "CEO, Apple",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut" ,
-        avatar: "J"
-    },
-    {
-        name: "John Doe",
-        title: "CEO, Apple",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut" ,
-        avatar: "J"
-    },
-    {
-        name: "John Doe",
-        title: "CEO, Apple",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut" ,
-        avatar: "J"
-    },
-    {
-        name: "John Doe",
-        title: "CEO, Apple",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut" ,
-        avatar: "J"
-    },
-    {
-        name: "John Doe",
-        title: "CEO, Apple",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut" ,
-        avatar: "J"
-    },
-    ]
-
+import {testimonials} from "@/constants";
 
 export function LandingContent() {
     return (

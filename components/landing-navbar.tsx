@@ -22,7 +22,7 @@ export function LandingNavbar() {
                 <div className="relative h-8 w-8 mr-4">
                     <Image src="/logo.png" alt="logo" fill/>
                 </div>
-                <h1 className={cn("text-2xl font-bold text-white",font.className)}>Genius</h1>
+                <h1 className={cn("text-2xl font-bold text-white",font.className)}>PYROCODEAI</h1>
             </Link>
             <div className="flex items-center gap-x-2">
                 <Link href={isSignedIn? "/dashboard" : "/sign-up"}>

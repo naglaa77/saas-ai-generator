@@ -7,7 +7,7 @@ export function Loader() {
             <div className="w-10 h-10 animate-spin">
                 <Image alt="logo" fill src="/logo.png"/>
             </div>
-            <p className="text-sm text-muted-foreground">Genius is thinking....</p>
+            <p className="text-sm text-muted-foreground">PyrocodeAI is thinking....</p>
         </div>
     )
 }
