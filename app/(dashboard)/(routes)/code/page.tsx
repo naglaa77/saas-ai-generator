@@ -51,10 +51,10 @@ export default function CodePage() {
                 content: values.prompt
             }
             const newMessages = [...messages, userMessage];
-            console.log("newMessages",newMessages)
+
 
             const response = await axios.post("/api/code", {messages: newMessages});
-            console.log("20000000000000000",response.data)
+
             setMessages((current) => [...current,userMessage,response.data]);
 
             form.reset()
@@ -70,7 +70,7 @@ export default function CodePage() {
         }
    }
 
-    console.log("messages22222222222",messages)
+
 
     // @ts-ignore
     return (
